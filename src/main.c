@@ -2,34 +2,46 @@
 #include <stdlib.h>
 #include "tokenizer.h"
 #include "history.h"
-
 #define MAX_INPUT_LENGTH 100
 
-int main(){
+int main()
+{
+  int input = 1;
+  List *history = init_history();
   char str[MAX_INPUT_LENGTH];
 
-  while (1) {
+  while (input != 0)
+  {
+    printf("Select an option: tokenizer: 1, history: 2, quit: 0\n");
+    
+    // Read user input
+    scanf("%d", &input);
+    getchar();
+    switch (input)
+    {
+    case 1:
+      printf("> ");                   // Display prompt
+      fgets(str, sizeof(str), stdin); // Read user input
+      printf("%s\n", str);            // Echo input
 
-    //Display prompt                                                                                                                          
-    printf("> ");
+      // Tokenize the input
+      char **tokens = tokenize(str);
+      print_tokens(tokens);
+      free_tokens(tokens);
 
-    //Read user input                                                                                                                         
-    fgets(str, sizeof(str), stdin);
+      // Add input to history
+      add_history(history, str);
+      break;
 
-    //Echo input                                                                                                                              
-    printf("%s\n", str);
+    case 2:
+      print_history(history);
+      free_history(history);
+      break;
 
-    //tokenize input                                                                                                                          
-    List* history = init_history();
-    add_history(history, str);
-
-    char **tokens = tokenize(str);
-    for (int i = 0; tokens[i] != NULL; i++) {
-      printf("Tokens: %s", tokens[i]);
+    case 0:
+      printf("Goodbye...");
+      break;
     }
-
-    free_tokens(tokens);
   }
   return 0;
 }
-
